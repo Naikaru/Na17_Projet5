@@ -1,0 +1,27 @@
+Requêtes :
+
+
+pour chopper tout les labels de la base :
+
+MATCH (n)
+WITH DISTINCT labels(n) AS labels
+UNWIND labels AS label
+RETURN DISTINCT label
+
+pour chopper le nom de tout les noeuds de la base (fonctionne car ils ont tous un attribut name) :
+MATCH (n) RETURN n.name
+
+pour chopper le nom de tout les noeuds de la base portant un certain label "LABEL" (fonctionne car ils ont tous un attribut name) :
+MATCH (n:LABEL) RETURN n.name
+
+
+pour récupérer les incidents ayant touché une bouteille pendant une période donnée :
+
+MATCH (n:Incident)-[*1..20]-(m:Bouteille) WHERE n.date<'2017-12-01' AND n.date>'2016-11-01' AND m.name='bouteille1'  RETURN n
+
+pour récupérer les remontages ayant été effectué dans une cuve pendant une période donnée :
+
+MATCH (n:Cuve)-[*2]-(r:Remontage) WHERE n.name='cuve1' and r.dateRemontage<'2018-06-19' and r.dateRemontage>'2016-02-26' return r
+
+pour récupérer les mesures relatives à une bouteille :
+ MATCH (n:Mesure)-[*1..20]-(m:Bouteille) WHERE m.name='bouteille1'  RETURN n
