@@ -61,16 +61,16 @@ def informationsFermentation(connection):
 
 def informationsMoutFermentation(connection):
 	cursor = connection.cursor()
-	cursor.exectute('SELECT A.fermentation, A.mout, P.noParcelle FROM AssociationMoutFerm A JOIN Mout M ON M.noMout = A.mout JOIN Parcelle P ON P.noParcelle = M.parcelle GROUP BY A.fermentation, A.mout, P.noParcelle ORDER BY A.fermentation, A.mout, P.noParcelle;')
+	cursor.execute('SELECT A.fermentation, A.mout, P.noParcelle FROM AssociationMoutFerm A JOIN Mout M ON M.noMout = A.mout JOIN Parcelle P ON P.noParcelle = M.parcelle GROUP BY A.fermentation, A.mout, P.noParcelle ORDER BY A.fermentation, A.mout, P.noParcelle;')
 	
 	ligne = cursor.fetchone()
-        titre = ["Fermentation : ","Mout : "," Parcelle : "]
-        while ligne :
+	titre = ["Fermentation : ","Mout : ","Parcelle : "]
+	while ligne :
 		chaine =""
-                for i in range(9):
-                	chaine = chaine+titre[i]+str(ligne[i])+"\n"
-                print (chaine)
-                ligne = cursor.fetchone()
+		for i in range(3):
+			chaine = chaine+titre[i]+str(ligne[i])+"\n"
+		print (chaine)
+		ligne = cursor.fetchone()
 
 
 
@@ -144,6 +144,6 @@ if __name__ == '__main__':
 		elif (choix == 4):
 			print("Information sur les fermentations : \n")
 			informationsFermentation(conn)
-		elif (choix == 5
+		elif (choix == 5):
 			print("Informations sur le melange des mout : \n")
 			informationsMoutFermentation(conn)
