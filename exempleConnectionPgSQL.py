@@ -21,3 +21,9 @@ while ligne :
 		chaine = chaine+ str(ligne[i])+"\t"
 	print (chaine)
 	ligne = cursor.fetchone()
+
+
+# Requête pour récupérer tous les incidents survenues sur l'élaboration d'une bouteille
+
+#def incidentsBouteilles():
+	#cursor.execute('SELECT B.noSerie AS bouteille, I.*, E.idEtape AS etape FROM Bouteille B, Fut F,  
