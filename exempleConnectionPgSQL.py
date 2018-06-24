@@ -18,11 +18,11 @@ def incidentsBouteilles(numBouteille,connection):
 	ligne = cursor.fetchone()
 	titre=["Bouteille numéro : ","Etape de l'incident : ","Incident numéro : ","Description de l'incident: ","Date de l'incident: "]
 	while ligne :
-			chaine =""
-			for i in range(5):
-					chaine = chaine+titre[i]+str(ligne[i])+"\n"
-			print (chaine)
-			ligne = cursor.fetchone()
+		chaine =""
+		for i in range(5):
+				chaine = chaine+titre[i]+str(ligne[i])+"\n"
+		print (chaine)
+		ligne = cursor.fetchone()
 
 
 # Pour chaque Cuve, on montre les fermentation qui s'y sont déroulées et les mesures qui y ont été faites 
@@ -34,11 +34,12 @@ def informationsCuve(connection):
 	ligne = cursor.fetchone()
 	titre = ["Cuve numéro : ","Capacité (L) : ","noFermentation : ","debutFermentation : ","finFermentation : ","chaptalisation :","Quantité de Levure : ", "Type de levures : ", "Date de la mesure : ", "Temperature : ", "Masse volumique : "]
 	while ligne :
-			chaine =""
-			for i in range(11):
-				chaine = chaine+titre[i]+str(ligne[i])+"\n"
-			print (chaine)
-			ligne = cursor.fetchone()
+		chaine =""
+		for i in range(11):
+			chaine = chaine+titre[i]+str(ligne[i])+"\n"
+		print (chaine)
+		ligne = cursor.fetchone()
+
 
 # Pour chaque fermentation on montre les différentes mesures, ajout de Diammonium ou les remontages qui ont pu être effectués 
 
@@ -49,11 +50,32 @@ def informationsFermentation(connection):
 	ligne = cursor.fetchone()
 	titre = ["Fermentation : ","debutF : ","finF : ","Date Mesure : ","Temperature : ","Masse Volumique : ","Date Remontage : ","Ajout Diammonium : ","Quantite : "]
 	while ligne :
-			chaine =""
-			for i in range(9):
-				chaine = chaine+titre[i]+str(ligne[i])+"\n"
-			print (chaine)
-			ligne = cursor.fetchone()
+		chaine =""
+		for i in range(9):
+			chaine = chaine+titre[i]+str(ligne[i])+"\n"
+		print (chaine)
+		ligne = cursor.fetchone()
+
+
+# Permet de connaître pour chaque Fermentation le mélange de Moût présent, ainsi que de quelle parcelle proviennent les mouts.
+
+def informationsMoutFermentation(connection):
+	cursor = connection.cursor()
+	cursor.exectute('SELECT A.fermentation, A.mout, P.noParcelle FROM AssociationMoutFerm A JOIN Mout M ON M.noMout = A.mout JOIN Parcelle P ON P.noParcelle = M.parcelle GROUP BY A.fermentation, A.mout, P.noParcelle ORDER BY A.fermentation, A.mout, P.noParcelle;')
+	
+	ligne = cursor.fetchone()
+        titre = ["Fermentation : ","Mout : "," Parcelle : "]
+        while ligne :
+		chaine =""
+                for i in range(9):
+                	chaine = chaine+titre[i]+str(ligne[i])+"\n"
+                print (chaine)
+                ligne = cursor.fetchone()
+
+
+
+
+
 #Permet de choisir une bouteille parmis celles enregistrées en base.
 def choix_Bouteille(connection):
 	choix =0
@@ -91,15 +113,16 @@ def afficheTrace(numBouteille,connection):
 def menu():
 	choix = 0
 	
-	while(choix < 1 or choix > 5):
+	while(choix < 1 or choix > 6):
 		choix = int(input("Que voulez vous faire ? \n\
 		1. Visualiser la traçabilité complète d'une bouteille. \n\
 		2. Voir tout les incidents impactant une bouteille \n\
 		3. Afficher toutes les informations relatives aux cuves \n\
 		4. Afficher toutes les informations relatives aux fermentations\n\
-		5. Quitter \n"))
+		5. Afficher le melange de mout present dans les fermentations\n\
+		6. Quitter \n"))
 		
-		if(choix < 1 or choix > 5):
+		if(choix < 1 or choix > 6):
 			print("Erreur dans le choix réalisé, veuillez ressayer.")
 	
 	return choix
@@ -107,17 +130,20 @@ def menu():
 
 if __name__ == '__main__':
 	choix = 0
-	while (choix!= 5):
+	while (choix!= 6):
 		choix = menu()
 		if (choix == 1):
 			print("Traçabilité :\n")
 			afficheTrace(choix_Bouteille(conn),conn)
-		if (choix == 2):
+		elif (choix == 2):
 			print("Suivi des incidents : \n")
 			incidentsBouteilles(choix_Bouteille(conn),conn)
-		if (choix==3):
+		elif (choix == 3):
 			print("Information sur les cuves : \n")
 			informationsCuve(conn)
-		if (choix == 4):
+		elif (choix == 4):
 			print("Information sur les fermentations : \n")
 			informationsFermentation(conn)
+		elif (choix == 5
+			print("Informations sur le melange des mout : \n")
+			informationsMoutFermentation(conn)
